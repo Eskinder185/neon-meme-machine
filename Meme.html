@@ -1,0 +1,32 @@
+<!--
+  Meme Generator Web App
+  This page allows users to generate memes by entering top and bottom text along with an image URL.
+  Users can create multiple memes and delete them individually.
+  Built using HTML, CSS, and vanilla JavaScript.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meme Generator</title>
+  <link rel="stylesheet" href="C:\Users\eskew\OneDrive\Documents\School\springboard\Meme Generator\Meme.css" />
+
+</head>
+<body>
+  <div class="container">
+    <h1>CyberMeme Creator</h1>
+    <!-- Meme Generator Form -->
+    <form id="memeForm">
+      <input type="text" id="topText" placeholder="🔥 Top Caption (Roast Level 100)" required />
+      <input type="text" id="bottomText" placeholder="💀 Bottom Zinger (Punchline Here)" required />
+      <input type="url" id="imageUrl" placeholder="📸 Meme Image URL (Paste it here)" required />
+      <button type="submit">Generate Meme Magic ✨</button>
+    </form>
+    <!-- Container to display generated memes -->
+    <div id="memeGallery"></div>
+  </div>
+
+  <script src="C:\Users\eskew\OneDrive\Documents\School\springboard\Meme Generator\Meme.js"></script>
+</body>
+</html>

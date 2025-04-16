@@ -1,0 +1,133 @@
+/* 
+  Meme Generator Styling
+  This CSS styles the layout, form, and meme output.
+  It includes styles for inputs, buttons, image text overlays, and delete functionality.
+*/
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #ffffff;
+  text-align: center;
+  padding: 20px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+  background: rgba(20, 20, 30, 0.85);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  border: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+h1 {
+  font-size: 2em;
+  color: #00f7ff;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px #00f7ff;
+}
+
+form input {
+  padding: 12px;
+  margin: 10px auto;
+  width: 85%;
+  display: block;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  background-color: #1f1f2e;
+  color: #fff;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+form input::placeholder {
+  color: #aaa;
+}
+
+form button {
+  padding: 12px 25px;
+  background: linear-gradient(45deg, #00f7ff, #0077cc);
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 1em;
+  margin-top: 15px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 0 10px #00f7ff;
+}
+
+form button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #00f7ff;
+}
+
+#memeGallery {
+  margin-top: 30px;
+}
+
+.meme-wrapper {
+  display: inline-block;
+  margin: 20px;
+  text-align: center;
+}
+
+.meme {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  border: 2px solid #00f7ff;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.meme img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.meme-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffffff;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-shadow: 2px 2px 6px #000, 0 0 10px #00f7ff;
+  width: 90%;
+  text-align: center;
+  pointer-events: none;
+  padding: 0 10px;
+  z-index: 2;
+}
+
+.meme-text.top {
+  top: 10px;
+}
+
+.meme-text.bottom {
+  bottom: 10px;
+}
+
+.delete-btn {
+  margin-top: 10px;
+  background: #ff0033;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 0 10px #ff0033;
+  transition: background 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: #cc0029;
+  box-shadow: 0 0 20px #ff0033;
+}
