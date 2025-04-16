@@ -17,8 +17,17 @@ A futuristic meme generator built using HTML, CSS, and vanilla JavaScript.
 ## 📂 Technologies
 - HTML5
 - CSS3 (with futuristic theme)
-- JavaScript (ES6)
+- JavaScript 
+  
+## 🌐 Live Demo
 
+👉 [Click here to try the Neon Meme Machine](https://eskinder185.github.io/neon-meme-machine/)
+
+## 🖼️ Screenshot
+
+Here's a preview of the CyberMeme Creator in action:
+
+![Invincible screenshot](screenshot.png)
 
 
 Made with 💙 by Eskinder Kassahun
