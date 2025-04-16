@@ -95,10 +95,16 @@ form button:hover {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  color: #ffffff;
-  font-size: 2.5em;
-  font-weight: 900;
-  text-shadow: 2px 2px 6px #000, 0 0 10px #00f7ff;
+  color: white;
+  font-size: 3.5em;
+  font-weight: 900; 
+  text-transform: uppercase; 
+  font-family: Impact, Arial Black, sans-serif; 
+  text-shadow:
+    2px 2px 0 #000,
+    -2px 2px 0 #000,
+    2px -2px 0 #000,
+    -2px -2px 0 #000;
   width: 90%;
   text-align: center;
   pointer-events: none;
