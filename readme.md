@@ -10,14 +10,6 @@ Installable **PWA** that works **offline**.
 ## 🚀 Live Demo
 **https://eskinder185.github.io/neon-meme-machine/**
 
----
-
-## 🎥 Demo (20–30s)
-> Short walkthrough: paste URL or upload → edit captions → drag text → 2× export → save to gallery.
-
-![Demo GIF](docs/demo.gif)
-
----
 
 ## 📈 Lighthouse (Desktop)
 Performance + PWA scores from the deployed site.
