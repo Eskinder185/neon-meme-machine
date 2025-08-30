@@ -1,33 +1,51 @@
-# Neon Meme Machine 🔮
+# MemeForge (Neon Meme Studio) ⚡
 
-A futuristic meme generator built using HTML, CSS, and vanilla JavaScript.
+Create crispy memes with neon glow, auto-fit text, drag-to-position, and one-click export.  
+Installable **PWA** that works **offline**.
 
-## 💡 Features
-- Add top and bottom text to any image
-- Delete memes individually
-- Clean, glowing cyberpunk-style UI
-- 100% vanilla JS — no frameworks
+![badge](https://img.shields.io/badge/PWA-Ready-00e5ff) ![badge](https://img.shields.io/badge/Export-2×%2F3×-7a5cff) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## 🚀 How to Use
-1. Enter top and bottom meme text.
-2. Paste an image URL.
-3. Click **"Generate Meme Magic ✨"** to create your meme.
-4. Click **"Delete Meme"** to remove any meme.
+---
 
-## 📂 Technologies
-- HTML5
-- CSS3 (with futuristic theme)
-- JavaScript 
-  
-## 🌐 Live Demo
+## 🚀 Live Demo
+**https://eskinder185.github.io/neon-meme-machine/**
 
-👉 [Click here to try the Neon Meme Machine](https://eskinder185.github.io/neon-meme-machine/)
+---
 
-## 🖼️ Screenshot
+## 🎥 Demo (20–30s)
+> Short walkthrough: paste URL or upload → edit captions → drag text → 2× export → save to gallery.
 
-Here's a preview of the CyberMeme Creator in action:
+![Demo GIF](docs/demo.gif)
 
-![Invincible screenshot](screenshot.png)
+---
 
+## 📈 Lighthouse (Desktop)
+Performance + PWA scores from the deployed site.
 
-Made with 💙 by Eskinder Kassahun
+![Lighthouse](docs/lighthouse.png)
+
+Full report: [`docs/lighthouse-report.html`](docs/lighthouse-report.html)
+
+---
+
+## ✨ Features
+- **Neon canvas renderer**: auto-contrast text, stroke, optional glow
+- **Drag to position** top/bottom captions
+- **2× / 3× hi-res PNG export**
+- **Local gallery** (this device) with download/delete
+- **Share links** (state encoded in URL)
+- **Installable PWA** + **offline-first** (service worker caching)
+- Fun **random captions** & keyboard shortcuts (D = download, R = render, ⌘/Ctrl+S = save)
+
+---
+
+## 🧰 Tech
+HTML, CSS, JavaScript (Canvas), Service Worker, Manifest  
+No backend; privacy-friendly by design.
+
+---
+
+## 🏁 Quick Start (local)
+```bash
+npm i
+npm run start     # serves at http://localhost:5173
