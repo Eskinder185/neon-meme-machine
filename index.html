@@ -1,32 +1,107 @@
-<!--
-  Meme Generator Web App
-  This page allows users to generate memes by entering top and bottom text along with an image URL.
-  Users can create multiple memes and delete them individually.
-  Built using HTML, CSS, and vanilla JavaScript.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Meme Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Neon Meme Generator</title>
+
+  <!-- App styles -->
   <link rel="stylesheet" href="style.css" />
 
+  <!-- PWA + icons -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#00e5ff" />
+  <link rel="icon" href="icons/icon-192.png" />
+
+  <!-- Social share -->
+  <meta property="og:title" content="Neon Meme Machine" />
+  <meta property="og:description" content="Create crispy memes with neon glow, auto-fit text, and offline support." />
+  <meta property="og:image" content="screenshot.png" />
+  <meta name="twitter:card" content="summary_large_image" />
 </head>
 <body>
-  <div class="container">
-    <h1>CyberMeme Creator</h1>
-    <!-- Meme Generator Form -->
-    <form id="memeForm">
-      <input type="text" id="topText" placeholder="🔥 Top Caption (Roast Level 100)" required />
-      <input type="text" id="bottomText" placeholder="💀 Bottom Zinger (Punchline Here)" required />
-      <input type="url" id="imageUrl" placeholder="📸 Meme Image URL (Paste it here)" required />
-      <button type="submit">Generate Meme Magic ✨</button>
-    </form>
-    <!-- Container to display generated memes -->
-    <div id="memeGallery"></div>
-  </div>
+  <header class="hero">
+    <h1>⚡ Neon Meme Generator</h1>
+    <p>Create crispy memes with neon glow, auto-fit text, and one-click export.</p>
+  </header>
 
+  <main class="wrap">
+    <section class="controls" aria-label="Meme controls">
+      <form id="memeForm">
+        <label>Top caption
+          <input type="text" id="topText" maxlength="120" placeholder="Top text" />
+        </label>
+        <label>Bottom caption
+          <input type="text" id="bottomText" maxlength="120" placeholder="Bottom text" />
+        </label>
+
+        <div class="row">
+          <label>Image URL
+            <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg" />
+          </label>
+          <div class="or">or</div>
+          <label class="fileLabel">Upload
+            <input type="file" id="imageFile" accept="image/*" />
+          </label>
+        </div>
+
+        <div class="row">
+          <label>Font
+            <select id="fontFamily">
+              <option value="Impact, Haettenschweiler, 'Arial Black', sans-serif">Impact (classic)</option>
+              <option value="Inter, system-ui, sans-serif">Inter</option>
+              <option value="'Anton', Impact, sans-serif">Anton</option>
+            </select>
+          </label>
+          <label>Max font size
+            <input type="range" id="maxFont" min="20" max="120" value="72" />
+          </label>
+          <label>Stroke
+            <input type="checkbox" id="stroke" checked />
+          </label>
+          <label>Neon glow
+            <input type="checkbox" id="glow" checked />
+          </label>
+        </div>
+
+        <div class="row actions">
+          <button type="button" id="randomBtn" title="Suggest funny fillers">🎲 Random captions</button>
+          <button type="button" id="clearBtn">Clear</button>
+          <button type="submit" class="primary">Render</button>
+          <button type="button" id="downloadBtn">Download PNG</button>
+          <button type="button" id="saveBtn">Save to Gallery</button>
+          <button type="button" id="shareBtn">Share Link</button>
+        </div>
+
+        <small class="hint">Tip: drag text on the canvas; use mouse or touch.</small>
+      </form>
+    </section>
+
+    <section class="stage">
+      <canvas id="canvas" width="1080" height="1080" aria-label="Meme preview" role="img"></canvas>
+      <div class="stage-help">Drop an image here</div>
+    </section>
+  </main>
+
+  <section class="wrap">
+    <h2>📚 Gallery (local)</h2>
+    <div id="memeGallery" class="gallery"></div>
+  </section>
+
+  <footer class="wrap foot">
+    <p>Made for Eskinder portfolio • Offline-first • No tracking</p>
+  </footer>
+
+  <!-- App JS -->
   <script src="script.js"></script>
+
+  <!-- Register Service Worker AFTER the page loads -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js");
+      });
+    }
+  </script>
 </body>
 </html>
