@@ -21,6 +21,11 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
+  // Skip non-HTTP(S) requests (like chrome-extension://)
+  if (!e.request.url.startsWith("http")) {
+    return;
+  }
+  
   const url = new URL(e.request.url);
   const isAsset = ASSETS.some((p) => url.pathname.endsWith(p.replace("./", "/")));
   if (isAsset) {
