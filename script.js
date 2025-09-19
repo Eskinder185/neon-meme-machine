@@ -703,8 +703,59 @@ function enhancePageTransitions() {
   });
 }
 
+// ==== Mobile Optimizations ====
+function initMobileOptimizations() {
+  // Prevent zoom on double tap for buttons
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function (event) {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, false);
+  
+  // Improve mobile navigation
+  const hamburger = document.querySelector('.hamburger');
+  const navMenu = document.querySelector('.nav-menu');
+  
+  if (hamburger && navMenu) {
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+        navMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+      }
+    });
+    
+    // Close mobile menu when clicking nav links
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+      });
+    });
+  }
+  
+  // Improve canvas touch handling
+  const canvas = document.getElementById('canvas');
+  if (canvas) {
+    // Prevent scrolling when touching canvas
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+  }
+}
+
 // ==== Initialize Everything ====
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize mobile optimizations first
+  initMobileOptimizations();
   
   // Initialize theme first
   initTheme();

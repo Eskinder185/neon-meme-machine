@@ -784,26 +784,6 @@ canvas:hover {
   gap: 20px;
 }
 
-.footer-links {
-  display: flex;
-  gap: 32px;
-  align-items: center;
-}
-
-.footer-links a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  padding: 8px 16px;
-  border-radius: 8px;
-}
-
-.footer-links a:hover {
-  color: var(--brand);
-  background: rgba(0, 212, 255, 0.1);
-  transform: translateY(-2px);
-}
 
 .footer-copyright p {
   margin: 0;
@@ -1386,6 +1366,29 @@ body::before {
 
 /* Mobile Navigation */
 @media (max-width: 768px) {
+  /* Improve touch targets */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Better mobile scrolling */
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Mobile navbar improvements */
+  .navbar {
+    padding: 12px 16px;
+    min-height: 60px;
+  }
+  
+  .nav-container {
+    padding: 0;
+  }
+  
+  .nav-logo {
+    font-size: 18px;
+  }
   .nav-menu {
     position: fixed;
     top: 72px;
@@ -1487,11 +1490,6 @@ body::before {
     gap: 16px;
   }
   
-  .footer-links {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px;
-  }
   
   .hero {
     min-height: 70vh;
@@ -1509,5 +1507,197 @@ body::before {
   .why-memeforge h2 {
     font-size: 28px;
     margin-bottom: 40px;
+  }
+  
+  /* Mobile button improvements */
+  .btn-primary, .btn-secondary {
+    min-height: 48px;
+    padding: 12px 24px;
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+  
+  .hero-actions .btn-primary {
+    width: 100%;
+    max-width: 280px;
+    margin-bottom: 16px;
+  }
+  
+  .hero-actions .btn-secondary {
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  /* Mobile form improvements */
+  .controls {
+    padding: 20px 16px;
+    margin: 16px;
+  }
+  
+  .controls input, .controls select {
+    min-height: 48px;
+    font-size: 16px;
+    padding: 12px 16px;
+    touch-action: manipulation;
+  }
+  
+  .controls label {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  
+  /* Mobile canvas improvements */
+  .stage {
+    margin: 16px;
+    padding: 16px;
+  }
+  
+  .stage canvas {
+    max-width: 100%;
+    height: auto;
+    touch-action: none;
+  }
+  
+  /* Mobile gallery improvements */
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .gallery .card {
+    min-height: 120px;
+  }
+  
+  /* Mobile FAQ improvements */
+  .faq-question {
+    padding: 16px;
+    font-size: 16px;
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  
+  .faq-answer {
+    padding: 0 16px 16px;
+  }
+  
+  /* Mobile page headers */
+  .page-header {
+    padding: 40px 16px 20px;
+  }
+  
+  .page-header h1 {
+    font-size: clamp(24px, 6vw, 36px);
+  }
+  
+  .page-header p {
+    font-size: 16px;
+    margin-top: 12px;
+  }
+  
+  /* Mobile wrap padding */
+  .wrap {
+    padding: 0 16px;
+  }
+  
+  /* Mobile feature cards */
+  .feature-card {
+    padding: 24px 20px;
+    margin: 0 16px;
+  }
+  
+  .feature-card h3 {
+    font-size: 20px;
+    margin: 16px 0 12px;
+  }
+  
+  .feature-card p {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  
+  /* Mobile footer */
+  .main-footer {
+    padding: 32px 0;
+    margin-top: 60px;
+  }
+  
+  .footer-copyright p {
+    font-size: 14px;
+    padding: 0 16px;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .hero {
+    min-height: 60vh;
+    padding: 40px 12px 30px;
+  }
+  
+  .hero-title {
+    font-size: clamp(28px, 7vw, 48px);
+    line-height: 1.2;
+  }
+  
+  .hero-subtitle {
+    font-size: 16px;
+    margin: 16px 0 24px;
+  }
+  
+  .hero-actions .btn-primary,
+  .hero-actions .btn-secondary {
+    max-width: 100%;
+    margin-bottom: 12px;
+  }
+  
+  .nav-logo {
+    font-size: 16px;
+  }
+  
+  .page-header h1 {
+    font-size: clamp(20px, 5vw, 28px);
+  }
+  
+  .feature-card {
+    padding: 20px 16px;
+    margin: 0 12px;
+  }
+  
+  .feature-card h3 {
+    font-size: 18px;
+  }
+  
+  .feature-card p {
+    font-size: 14px;
+  }
+  
+  .controls {
+    margin: 12px;
+    padding: 16px 12px;
+  }
+  
+  .stage {
+    margin: 12px;
+    padding: 12px;
+  }
+  
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    padding: 12px;
+  }
+  
+  .wrap {
+    padding: 0 12px;
+  }
+  
+  .why-memeforge {
+    padding: 40px 0;
+  }
+  
+  .why-memeforge h2 {
+    font-size: 24px;
+    margin-bottom: 32px;
   }
 }
