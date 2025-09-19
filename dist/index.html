@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MemeLab</title>
+
+<link rel="apple-touch-icon" href="/assets/icon-180-BIWTto9U.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32-D0ga8Irb.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16-CsRrcdFz.png" />
+<link rel="mask-icon" href="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3e%3crect%20width='100'%20height='100'%20fill='black'/%3e%3cg%20fill='%2300e5ff'%3e%3cpolygon%20points='45,8%2058,8%2053,46%2074,46%2054,92%2042,92%2047,54%2028,54'/%3e%3c/g%3e%3c/svg%3e" color="#00e5ff" />
+
+  <!-- App styles -->
+  
+
+  <!-- PWA + icons -->
+  <link rel="manifest" href="/assets/manifest-B07egx6Y.json" />
+  <meta name="theme-color" content="#00e5ff" />
+  <link rel="icon" href="/assets/icon-192-BrQmOvGF.png" />
+
+  <!-- Social share -->
+  <meta property="og:title" content="MemeLab - Neon Meme Machine" />
+  <meta property="og:description" content="Create crispy memes with neon glow, auto-fit text, and offline support." />
+  <meta property="og:image" content="/assets/screenshot-DmI7mNDE.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="module" crossorigin src="/assets/index-BRhmE994.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BpxvEOhM.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo" data-page="home">⚡ MemeLab</a>
+      <div class="nav-menu">
+        <a href="#" class="nav-link" data-page="home">Home</a>
+        <a href="#" class="nav-link" data-page="forge">Forge</a>
+        <a href="#" class="nav-link" data-page="about">About</a>
+        <a href="#" class="nav-link" data-page="faq">FAQ</a>
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content Container -->
+  <div id="pageContent">
+    <!-- Home Page -->
+    <div id="homePage" class="page active">
+      <header class="hero">
+        <div class="hero-content">
+          <h1 class="hero-title">Forge Your Memes in <span class="glitch-text" data-text="Neon">Neon</span></h1>
+          <p class="hero-subtitle">Fast, fun, and glowing with creativity.</p>
+          <div class="hero-actions">
+            <button class="btn-primary btn-forge" data-page="forge">
+              <span class="btn-icon">⚡</span>
+              Start Forging
+            </button>
+            <button class="btn-secondary" id="quickDemo">
+              <span class="btn-icon">🎬</span>
+              Quick Demo
+            </button>
+          </div>
+        </div>
+        <div class="hero-particles" id="heroParticles"></div>
+      </header>
+
+      <section class="showcase">
+        <h2>Featured Creations</h2>
+        <div class="meme-carousel" id="featuredMemes">
+          <!-- Featured memes will be loaded here -->
+        </div>
+      </section>
+
+      <section class="why-memeforge">
+        <div class="wrap">
+          <h2>Why MemeLab?</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <div class="feature-icon">⚡</div>
+              <h3>Fast</h3>
+              <p>One-click exports & neon glow. Create memes in seconds, not minutes.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🎨</div>
+              <h3>Creative</h3>
+              <p>Fonts, colors, and meme styles. Express yourself with professional tools.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🌍</div>
+              <h3>Shareable</h3>
+              <p>Save, share, and go viral instantly. Your creativity deserves to be seen.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Forge Page (Original Editor) -->
+    <div id="forgePage" class="page">
+      <header class="page-header">
+        <h1>⚡ MemeLab Editor</h1>
+        <p>Create crispy memes with neon glow, auto-fit text, and one-click export.</p>
+      </header>
+
+      <main class="wrap">
+        <section class="controls" aria-label="Meme controls">
+      <form id="memeForm">
+        <label>Top caption
+          <input type="text" id="topText" maxlength="120" placeholder="Top text" />
+        </label>
+        <label>Bottom caption
+          <input type="text" id="bottomText" maxlength="120" placeholder="Bottom text" />
+        </label>
+
+        <div class="row">
+          <label>Image URL
+            <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg" />
+          </label>
+          <div class="or">or</div>
+          <label class="fileLabel">Upload
+            <input type="file" id="imageFile" accept="image/*" />
+          </label>
+        </div>
+
+        <div class="row">
+          <label>Font
+            <select id="fontFamily">
+              <option value="Impact, Haettenschweiler, 'Arial Black', sans-serif">Impact (classic)</option>
+              <option value="Inter, system-ui, sans-serif">Inter</option>
+              <option value="'Anton', Impact, sans-serif">Anton</option>
+            </select>
+          </label>
+          <label>Max font size
+            <input type="range" id="maxFont" min="20" max="120" value="72" />
+          </label>
+          <label>Stroke
+            <input type="checkbox" id="stroke" checked />
+          </label>
+          <label>Neon glow
+            <input type="checkbox" id="glow" checked />
+          </label>
+        </div>
+
+        <div class="row actions">
+          <button type="button" id="randomBtn" title="Suggest funny fillers">🎲 Random captions</button>
+          <button type="button" id="clearBtn">Clear</button>
+          <button type="submit" class="primary">Render</button>
+          <button type="button" id="downloadBtn">Download PNG</button>
+          <button type="button" id="saveBtn">Save to Gallery</button>
+          <button type="button" id="shareBtn">Share Link</button>
+        </div>
+
+        <small class="hint">Tip: drag text on the canvas; use mouse or touch.</small>
+      </form>
+    </section>
+
+    <section class="stage">
+      <canvas id="canvas" width="1080" height="1080" aria-label="Meme preview" role="img"></canvas>
+      <div class="stage-help">Drop an image here</div>
+    </section>
+  </main>
+
+  <div class="row" style="margin: 8px 0;">
+  <button type="button" id="inspectBtn">Storage Inspector</button>
+  <button type="button" id="clearAllBtn" style="margin-left:8px;">Clear All</button>
+</div>
+<details id="inspector" class="inspector">
+  <summary>Stored Items & Cache (click to expand)</summary>
+  <pre id="storageDump" style="white-space:pre-wrap;"></pre>
+  <button id="exportJsonBtn">Export JSON</button>
+</details>
+
+  <section class="wrap">
+    <h2>📚 Saved Memes (this device)</h2>
+    <div id="memeGallery" class="gallery"></div>
+  </section>
+</div>
+
+    <!-- About Page -->
+    <div id="aboutPage" class="page">
+      <header class="page-header">
+        <h1>About MemeLab</h1>
+        <p>The story behind the neon-powered meme revolution</p>
+      </header>
+      
+      <main class="wrap">
+        <section class="about-story">
+          <h2>Our Story</h2>
+          <p>MemeLab was built to make meme creation fun, fast, and stylish. We believe that everyone deserves access to professional-quality meme tools without the complexity. Powered by neon and creativity, we're here to help you express yourself in the most vibrant way possible.</p>
+        </section>
+
+        <section class="mission">
+          <h2>Mission & Values</h2>
+          <div class="mission-grid">
+            <div class="mission-card">
+              <h3>🎨 Self-Expression</h3>
+              <p>Express your creativity with stunning neon effects and professional typography.</p>
+            </div>
+            <div class="mission-card">
+              <h3>⚡ Speed</h3>
+              <p>Create memes in seconds, not minutes. Our optimized editor gets you from idea to share in record time.</p>
+            </div>
+            <div class="mission-card">
+              <h3>🌐 Community</h3>
+              <p>Join a community of creators who value quality, creativity, and that perfect neon glow.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="tech-showcase">
+          <h2>Tech & Features</h2>
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="feature-icon">✨</span>
+              <div>
+                <h4>Neon Glow Effects</h4>
+                <p>Make your memes stand out with customizable neon glow and stroke effects.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">🎲</span>
+              <div>
+                <h4>Smart Captions</h4>
+                <p>Get instant inspiration with our random caption generator, or create your own.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">📱</span>
+              <div>
+                <h4>One-Click Export</h4>
+                <p>Download, save, and share your creations instantly across all platforms.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">🔒</span>
+              <div>
+                <h4>Privacy First</h4>
+                <p>No tracking, no data collection. Your creativity stays yours.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="timeline">
+          <h2>Our Journey</h2>
+          <div class="timeline-container">
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <h3>v1.0 - The Foundation</h3>
+                <p>Built the core meme editor with canvas rendering and basic text effects.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <h3>v2.0 - Neon Mode</h3>
+                <p>Added the signature neon glow effects and auto-fit typography system.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <h3>v3.0 - Community Forge</h3>
+                <p>Expanded into a full platform with multiple pages, themes, and enhanced UX.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- FAQ Page -->
+    <div id="faqPage" class="page">
+      <header class="page-header">
+        <h1>Frequently Asked Questions</h1>
+        <p>Everything you need to know about MemeLab</p>
+      </header>
+      
+      <main class="wrap">
+        <div class="faq-container">
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Do I need an account to save memes?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Nope! MemeLab works entirely in your browser. Your memes are saved locally on your device using localStorage. No accounts, no passwords, no hassle.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Can I use my memes commercially?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Absolutely! The memes you create are yours to use however you want. Just make sure any images you upload are properly licensed for your intended use.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Does MemeLab work on mobile?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Yes! MemeLab is fully responsive and works great on phones and tablets. You can even install it as a PWA for a native app experience.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Is this the best meme tool?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Yes, our lawyers say so. But seriously, we think our combination of neon effects, smart typography, and offline-first approach makes us pretty special.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>How do I share my memes?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Use the "Share Link" button to generate a shareable URL, or download your meme as a PNG and share it anywhere. The share link lets others see your creation and even edit it themselves!</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Why neon? Why not regular text?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Because regular is boring! Neon makes your memes pop, stand out in feeds, and gives them that premium, eye-catching quality. Plus, it's just more fun to look at.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Can I use my own fonts?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Currently, we offer Impact (classic meme font), Inter (modern), and Anton (bold). We're working on adding more font options in future updates!</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Is my data safe?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Absolutely! We don't collect any personal data, track you, or store your memes on our servers. Everything stays on your device. Privacy-first design is core to our mission.</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="main-footer">
+    <div class="wrap">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="#" data-page="home">Home</a>
+          <a href="#" data-page="about">About</a>
+          <a href="#" data-page="faq">FAQ</a>
+          <a href="https://github.com/Eskinder185/neon-meme-machine" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <div class="footer-copyright">
+          <p>© 2025 MemeLab ⚡ <span class="glow-text">Crafted in Neon</span></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- App JS -->
+
+  <!-- Register Service Worker AFTER the page loads -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js");
+      });
+    }
+  </script>
+</body>
+</html>
