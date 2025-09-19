@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Neon Meme Generator</title>
+  <title>MemeForge</title>
+
+<link rel="apple-touch-icon" href="icons/icon-180.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png" />
+<link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#00e5ff" />
 
   <!-- App styles -->
   <link rel="stylesheet" href="style.css" />
@@ -21,7 +26,7 @@
 </head>
 <body>
   <header class="hero">
-    <h1>⚡ Neon Meme Generator</h1>
+    <h1>⚡ MemeForge</h1>
     <p>Create crispy memes with neon glow, auto-fit text, and one-click export.</p>
   </header>
 
@@ -83,8 +88,18 @@
     </section>
   </main>
 
+  <div class="row" style="margin: 8px 0;">
+  <button type="button" id="inspectBtn">Storage Inspector</button>
+  <button type="button" id="clearAllBtn" style="margin-left:8px;">Clear All</button>
+</div>
+<details id="inspector" class="inspector">
+  <summary>Stored Items & Cache (click to expand)</summary>
+  <pre id="storageDump" style="white-space:pre-wrap;"></pre>
+  <button id="exportJsonBtn">Export JSON</button>
+</details>
+
   <section class="wrap">
-    <h2>📚 Gallery (local)</h2>
+    <h2>📚 Saved Memes (this device)</h2>
     <div id="memeGallery" class="gallery"></div>
   </section>
 

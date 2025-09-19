@@ -69,3 +69,28 @@ canvas {
 .gallery img { width: 100%; display: block; }
 .gallery .bar { display:flex; justify-content:space-between; align-items:center; padding:8px 10px; }
 .foot { color: var(--muted); text-align: center; }
+
+/* Aurora background using animated gradient blobs */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20% -10%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 35% at 20% 30%, rgba(122,92,255,0.35), transparent 60%),
+    radial-gradient(45% 40% at 80% 20%, rgba(0,229,255,0.35), transparent 60%),
+    radial-gradient(35% 45% at 50% 80%, rgba(140,255,255,0.25), transparent 60%);
+  filter: blur(40px) saturate(120%);
+  animation: aurora-move 18s ease-in-out infinite alternate;
+}
+@keyframes aurora-move {
+  0%   { transform: translate3d(0,0,0) rotate(0deg) scale(1);   }
+  50%  { transform: translate3d(2%, -2%, 0) rotate(10deg) scale(1.05); }
+  100% { transform: translate3d(-2%, 1%, 0) rotate(-6deg) scale(1.03); }
+}
+
+/* Keep content above */
+.hero, .wrap, .foot { position: relative; z-index: 1; }
+
+.inspector { background:#0e1524; border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:10px; }

@@ -275,3 +275,71 @@ el('shareBtn').addEventListener('click', () => {
   if (q.get('b')) { el('bottomText').value = state.bottom.text = q.get('b'); }
   render();
 })();
+
+// ---- Storage Inspector ----
+function approxBytesFromBase64DataURL(dataUrl) {
+  // strip "data:image/png;base64,"
+  const b64 = (dataUrl.split(',')[1] || '');
+  // base64 size ≈ 3/4 * length
+  return Math.floor((b64.length * 3) / 4);
+}
+
+async function inspectStorage() {
+  const dump = document.getElementById('storageDump');
+  const items = JSON.parse(localStorage.getItem('neon-memes') || '[]');
+  let total = 0;
+  let lines = [];
+  items.forEach((d, i) => {
+    const bytes = approxBytesFromBase64DataURL(d);
+    total += bytes;
+    lines.push(`#${i + 1} - ~${(bytes / 1024).toFixed(1)} KB`);
+  });
+
+  // LocalStorage overall size (keys + values)
+  let lsBytes = 0;
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    const v = localStorage.getItem(k) || '';
+    lsBytes += (k.length + v.length) * 2; // UTF-16 approx
+  }
+
+  // Cache Storage summary (PWA)
+  let cacheSummary = 'Cache Storage: n/a';
+  if ('caches' in window) {
+    const keys = await caches.keys();
+    const parts = [];
+    for (const key of keys) {
+      const cache = await caches.open(key);
+      const reqs = await cache.keys();
+      parts.push(`${key}: ${reqs.length} item(s)`);
+    }
+    cacheSummary = parts.join(' | ') || 'Cache Storage: empty';
+  }
+
+  dump.textContent =
+    `Local "neon-memes" items: ${items.length}\n` +
+    lines.join('\n') +
+    `\n\nApprox images total: ${(total / 1024).toFixed(1)} KB` +
+    `\nEstimated LocalStorage usage (all keys): ${(lsBytes / 1024).toFixed(1)} KB` +
+    `\n${cacheSummary}\n\nTip: Clear with the "Clear All" button or via DevTools → Application.`;
+}
+
+document.getElementById('inspectBtn').onclick = inspectStorage;
+
+document.getElementById('clearAllBtn').onclick = () => {
+  if (confirm('Delete all saved memes on this device?')) {
+    localStorage.removeItem('neon-memes');
+    renderGallery();
+    inspectStorage();
+  }
+};
+
+document.getElementById('exportJsonBtn')?.addEventListener('click', () => {
+  const data = localStorage.getItem('neon-memes') || '[]';
+  const blob = new Blob([data], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'neon-memes-export.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
