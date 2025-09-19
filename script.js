@@ -8,18 +8,24 @@ let currentPage = 'home';
 
 // Initialize theme from localStorage
 function initTheme() {
-  const savedTheme = localStorage.getItem('memeForge-theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', savedTheme);
+  const savedTheme = localStorage.getItem('memeLab-theme') || 'dark';
+  applyTheme(savedTheme);
   updateThemeIcon(savedTheme);
 }
 
 // Toggle theme
 function toggleTheme() {
-  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', newTheme);
-  localStorage.setItem('memeForge-theme', newTheme);
+  applyTheme(newTheme);
+  localStorage.setItem('memeLab-theme', newTheme);
   updateThemeIcon(newTheme);
+}
+
+// Apply theme to document
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.body.setAttribute('data-theme', theme);
 }
 
 // Update theme icon
@@ -103,7 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Theme toggle
   const themeToggle = document.getElementById('themeToggle');
   if (themeToggle) {
-    themeToggle.addEventListener('click', toggleTheme);
+    themeToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleTheme();
+    });
   }
   
   // Navigation links
@@ -112,12 +121,26 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const page = link.getAttribute('data-page');
       showPage(page);
+      
+      // Close mobile menu if open
+      const navMenu = document.querySelector('.nav-menu');
+      const hamburger = document.querySelector('.hamburger');
+      if (navMenu && hamburger) {
+        navMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+      }
     });
   });
   
-  // Initialize
-  initTheme();
-  initFromURL();
+  // Hamburger menu toggle
+  const hamburger = document.querySelector('.hamburger');
+  const navMenu = document.querySelector('.nav-menu');
+  if (hamburger && navMenu) {
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navMenu.classList.toggle('active');
+    });
+  }
 });
 
 // ==== FAQ Accordion ====
@@ -165,12 +188,30 @@ function loadFeaturedMemes() {
   lastFeaturedUpdate = now;
   
   if (savedMemes.length === 0) {
-    // Show placeholder if no memes
+    // Show placeholder memes with better design
     featuredContainer.innerHTML = `
-      <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-        <h3>No memes yet!</h3>
-        <p>Create your first meme to see it featured here.</p>
-        <button class="btn-primary" data-page="forge">Start Creating</button>
+      <div class="card placeholder-card">
+        <div class="placeholder-content">
+          <div class="placeholder-icon">🎨</div>
+          <h3>Your meme could be here</h3>
+          <p>Start creating to see your masterpieces featured!</p>
+        </div>
+      </div>
+      <div class="card trending-card">
+        <div class="trending-badge">🔥 Trending</div>
+        <div class="placeholder-content">
+          <div class="placeholder-icon">⚡</div>
+          <h3>Sample Meme</h3>
+          <p>This could be your viral creation!</p>
+        </div>
+      </div>
+      <div class="card cta-card">
+        <div class="placeholder-content">
+          <div class="placeholder-icon">🚀</div>
+          <h3>Ready to forge?</h3>
+          <p>Join the neon revolution!</p>
+          <button class="btn-primary" data-page="forge">Forge Now</button>
+        </div>
       </div>
     `;
     return;
@@ -379,62 +420,89 @@ canvas.addEventListener('pointermove', (e) => {
 window.addEventListener('pointerup', () => dragging = null);
 
 // ==== Form wiring ====
-const form = document.getElementById('memeForm');
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  // moderation check
-  const text = `${state.top.text} ${state.bottom.text}`.toLowerCase();
-  if (bannedWords.some(w => w && text.includes(w))) {
-    alert('Caption includes blocked words. Please edit.'); return;
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('memeForm');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // moderation check
+      const text = `${state.top.text} ${state.bottom.text}`.toLowerCase();
+      if (bannedWords.some(w => w && text.includes(w))) {
+        alert('Caption includes blocked words. Please edit.'); return;
+      }
+      render();
+    });
   }
-  render();
-});
 
-el('topText').addEventListener('input', (e) => { state.top.text = e.target.value; render(); });
-el('bottomText').addEventListener('input', (e) => { state.bottom.text = e.target.value; render(); });
-el('imageUrl').addEventListener('change', (e) => { if (e.target.value) loadFromURL(e.target.value); });
-el('imageFile').addEventListener('change', (e) => { const f = e.target.files?.[0]; if (f) loadFromFile(f); });
-el('fontFamily').addEventListener('change', (e) => { state.fontFamily = e.target.value; render(); });
-el('maxFont').addEventListener('input', (e) => { state.maxFont = +e.target.value; render(); });
-el('stroke').addEventListener('change', (e) => { state.stroke = e.target.checked; render(); });
-el('glow').addEventListener('change', (e) => { state.glow = e.target.checked; render(); });
+  // Form element event listeners
+  const topTextEl = el('topText');
+  const bottomTextEl = el('bottomText');
+  const imageUrlEl = el('imageUrl');
+  const imageFileEl = el('imageFile');
+  const fontFamilyEl = el('fontFamily');
+  const maxFontEl = el('maxFont');
+  const strokeEl = el('stroke');
+  const glowEl = el('glow');
+  const clearBtnEl = el('clearBtn');
+  const randomBtnEl = el('randomBtn');
 
-el('clearBtn').addEventListener('click', () => {
-  form.reset();
-  state.top.text = ''; state.bottom.text = '';
-  state.fontFamily = "Impact, Haettenschweiler, 'Arial Black', sans-serif";
-  state.maxFont = 72; state.stroke = true; state.glow = true;
-  render();
-});
+  if (topTextEl) topTextEl.addEventListener('input', (e) => { state.top.text = e.target.value; render(); });
+  if (bottomTextEl) bottomTextEl.addEventListener('input', (e) => { state.bottom.text = e.target.value; render(); });
+  if (imageUrlEl) imageUrlEl.addEventListener('change', (e) => { if (e.target.value) loadFromURL(e.target.value); });
+  if (imageFileEl) imageFileEl.addEventListener('change', (e) => { const f = e.target.files?.[0]; if (f) loadFromFile(f); });
+  if (fontFamilyEl) fontFamilyEl.addEventListener('change', (e) => { state.fontFamily = e.target.value; render(); });
+  if (maxFontEl) maxFontEl.addEventListener('input', (e) => { state.maxFont = +e.target.value; render(); });
+  if (strokeEl) strokeEl.addEventListener('change', (e) => { state.stroke = e.target.checked; render(); });
+  if (glowEl) glowEl.addEventListener('change', (e) => { state.glow = e.target.checked; render(); });
 
-el('randomBtn').addEventListener('click', () => {
-  const ups = ["This is fine.", "Deploying on Friday", "AI did it", "When prod = dev", "Cloud bill be like"];
-  const lows = ["Send help.", "it’s a feature", "pls no rate limit", "works on my machine", "ship it 🚀"];
-  el('topText').value = state.top.text = ups[(Math.random()*ups.length)|0];
-  el('bottomText').value = state.bottom.text = lows[(Math.random()*lows.length)|0];
-  render();
+  if (clearBtnEl) clearBtnEl.addEventListener('click', () => {
+    if (form) form.reset();
+    state.top.text = ''; state.bottom.text = '';
+    state.fontFamily = "Impact, Haettenschweiler, 'Arial Black', sans-serif";
+    state.maxFont = 72; state.stroke = true; state.glow = true;
+    render();
+  });
+
+  if (randomBtnEl) randomBtnEl.addEventListener('click', () => {
+    const ups = ["This is fine.", "Deploying on Friday", "AI did it", "When prod = dev", "Cloud bill be like"];
+    const lows = ["Send help.", "it's a feature", "pls no rate limit", "works on my machine", "ship it 🚀"];
+    if (topTextEl) topTextEl.value = state.top.text = ups[(Math.random()*ups.length)|0];
+    if (bottomTextEl) bottomTextEl.value = state.bottom.text = lows[(Math.random()*lows.length)|0];
+    render();
+  });
 });
 
 // Drag & drop image support
-const stage = document.querySelector('.stage');
-;['dragenter','dragover','dragleave','drop'].forEach(ev => {
-  stage.addEventListener(ev, (e) => { e.preventDefault(); e.stopPropagation(); });
-});
-stage.addEventListener('drop', (e) => {
-  const file = e.dataTransfer.files?.[0];
-  if (file && file.type.startsWith('image/')) loadFromFile(file);
+document.addEventListener('DOMContentLoaded', () => {
+  const stage = document.querySelector('.stage');
+  if (stage) {
+    ['dragenter','dragover','dragleave','drop'].forEach(ev => {
+      stage.addEventListener(ev, (e) => { e.preventDefault(); e.stopPropagation(); });
+    });
+    stage.addEventListener('drop', (e) => {
+      const file = e.dataTransfer.files?.[0];
+      if (file && file.type.startsWith('image/')) loadFromFile(file);
+    });
+  }
 });
 
 // ==== Download / Save / Share ====
-el('downloadBtn').addEventListener('click', () => {
-  const a = document.createElement('a');
-  a.href = canvas.toDataURL('image/png');
-  a.download = 'meme.png';
-  a.click();
+document.addEventListener('DOMContentLoaded', () => {
+  const downloadBtn = el('downloadBtn');
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', () => {
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'meme.png';
+      a.click();
+    });
+  }
 });
 
-const gallery = el('memeGallery');
 function renderGallery() {
+  const gallery = el('memeGallery');
+  if (!gallery) return;
+  
   const items = JSON.parse(localStorage.getItem('neon-memes') || '[]');
   gallery.innerHTML = '';
   items.forEach((src, i) => {
@@ -455,29 +523,37 @@ function renderGallery() {
     items.splice(idx,1); localStorage.setItem('neon-memes', JSON.stringify(items)); renderGallery();
   });
 }
-renderGallery();
 
-el('saveBtn').addEventListener('click', () => {
-  const items = JSON.parse(localStorage.getItem('neon-memes') || '[]');
-  items.unshift(canvas.toDataURL('image/png'));
-  localStorage.setItem('neon-memes', JSON.stringify(items.slice(0, 24))); // cap
-  renderGallery();
-});
+document.addEventListener('DOMContentLoaded', () => {
+  const saveBtn = el('saveBtn');
+  const shareBtn = el('shareBtn');
+  
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      const items = JSON.parse(localStorage.getItem('neon-memes') || '[]');
+      items.unshift(canvas.toDataURL('image/png'));
+      localStorage.setItem('neon-memes', JSON.stringify(items.slice(0, 24))); // cap
+      renderGallery();
+    });
+  }
 
-el('shareBtn').addEventListener('click', () => {
-  // simple sharable state in URL (image URL only, not uploads)
-  const params = new URLSearchParams({
-    u: el('imageUrl').value || '',
-    t: el('topText').value || '',
-    b: el('bottomText').value || ''
-  });
-  const url = `${location.origin}${location.pathname}?${params.toString()}`;
-  navigator.clipboard?.writeText(url);
-  alert('Share link copied to clipboard.');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', () => {
+      // simple sharable state in URL (image URL only, not uploads)
+      const params = new URLSearchParams({
+        u: el('imageUrl')?.value || '',
+        t: el('topText')?.value || '',
+        b: el('bottomText')?.value || ''
+      });
+      const url = `${location.origin}${location.pathname}?${params.toString()}`;
+      navigator.clipboard?.writeText(url);
+      alert('Share link copied to clipboard.');
+    });
+  }
 });
 
 // Load from URL params (for shared links)
-(function initFromURL(){
+(function initMemeFromURL(){
   const q = new URLSearchParams(location.search);
   if (q.get('u')) { el('imageUrl').value = q.get('u'); loadFromURL(q.get('u')); }
   if (q.get('t')) { el('topText').value = state.top.text = q.get('t'); }
@@ -533,28 +609,109 @@ async function inspectStorage() {
     `\n${cacheSummary}\n\nTip: Clear with the "Clear All" button or via DevTools → Application.`;
 }
 
-document.getElementById('inspectBtn').onclick = inspectStorage;
-
-document.getElementById('clearAllBtn').onclick = () => {
-  if (confirm('Delete all saved memes on this device?')) {
-    localStorage.removeItem('neon-memes');
-    renderGallery();
-    inspectStorage();
+document.addEventListener('DOMContentLoaded', () => {
+  const inspectBtn = document.getElementById('inspectBtn');
+  const clearAllBtn = document.getElementById('clearAllBtn');
+  const exportJsonBtn = document.getElementById('exportJsonBtn');
+  
+  if (inspectBtn) {
+    inspectBtn.onclick = inspectStorage;
   }
-};
 
-document.getElementById('exportJsonBtn')?.addEventListener('click', () => {
-  const data = localStorage.getItem('neon-memes') || '[]';
-  const blob = new Blob([data], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'neon-memes-export.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
+  if (clearAllBtn) {
+    clearAllBtn.onclick = () => {
+      if (confirm('Delete all saved memes on this device?')) {
+        localStorage.removeItem('neon-memes');
+        renderGallery();
+        inspectStorage();
+      }
+    };
+  }
+
+  if (exportJsonBtn) {
+    exportJsonBtn.addEventListener('click', () => {
+      const data = localStorage.getItem('neon-memes') || '[]';
+      const blob = new Blob([data], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'neon-memes-export.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+  }
 });
+
+// ==== Floating Particles Animation ====
+function createFloatingParticles() {
+  const particlesContainer = document.getElementById('heroParticles');
+  if (!particlesContainer) return;
+
+  // Clear any existing particles
+  particlesContainer.innerHTML = '';
+
+  // Create 15 floating particles
+  for (let i = 0; i < 15; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    
+    // Random positioning
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.top = Math.random() * 100 + '%';
+    
+    // Random animation delay
+    particle.style.animationDelay = Math.random() * 6 + 's';
+    
+    // Random size variation
+    const size = 2 + Math.random() * 4;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    
+    particlesContainer.appendChild(particle);
+  }
+  
+}
+
+// ==== Smooth Animations ====
+function addSmoothAnimations() {
+  // Add fade-in animations to elements as they come into view
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('fade-in-up');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  // Observe elements for animation
+  document.querySelectorAll('.card, .mission-card, .feature-item, .timeline-item, .faq-item, .feature-card').forEach(el => {
+    observer.observe(el);
+  });
+}
+
+// ==== Enhanced Page Transitions ====
+function enhancePageTransitions() {
+  // Add smooth transitions between pages
+  const pages = document.querySelectorAll('.page');
+  pages.forEach(page => {
+    page.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+  });
+}
 
 // ==== Initialize Everything ====
 document.addEventListener('DOMContentLoaded', () => {
+  
+  // Initialize theme first
+  initTheme();
+  
+  // Initialize navigation
+  initFromURL();
+  
   // Initialize FAQ accordion
   initFAQ();
   
@@ -563,4 +720,28 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Initialize quick demo
   initQuickDemo();
+  
+  // Initialize gallery
+  renderGallery();
+  
+  // Create floating particles
+  createFloatingParticles();
+  
+  // Add smooth animations
+  addSmoothAnimations();
+  
+  // Enhance page transitions
+  enhancePageTransitions();
+  
+  // Ensure theme is applied after everything loads
+  setTimeout(() => {
+    const currentTheme = localStorage.getItem('memeLab-theme') || 'dark';
+    applyTheme(currentTheme);
+    updateThemeIcon(currentTheme);
+    
+    // Force refresh particles if they're not showing
+    setTimeout(() => {
+      createFloatingParticles();
+    }, 500);
+  }, 100);
 });
