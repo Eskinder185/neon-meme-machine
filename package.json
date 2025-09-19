@@ -1,0 +1,26 @@
+{
+  "name": "neon-meme-machine",
+  "version": "1.0.0",
+  "description": "A futuristic meme generator built using HTML, CSS, and vanilla JavaScript.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eskinder185/neon-meme-machine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Eskinder185/neon-meme-machine/issues"
+  },
+  "homepage": "https://github.com/Eskinder185/neon-meme-machine#readme",
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "vite": "^7.1.6"
+  }
+}

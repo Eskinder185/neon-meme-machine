@@ -3,6 +3,215 @@ const el = (id) => document.getElementById(id);
 const canvas = el('canvas');
 const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
+// ==== Navigation & Theme System ====
+let currentPage = 'home';
+
+// Initialize theme from localStorage
+function initTheme() {
+  const savedTheme = localStorage.getItem('memeForge-theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+}
+
+// Toggle theme
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('memeForge-theme', newTheme);
+  updateThemeIcon(newTheme);
+}
+
+// Update theme icon
+function updateThemeIcon(theme) {
+  const themeIcon = document.querySelector('.theme-icon');
+  if (themeIcon) {
+    themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+  }
+}
+
+// Navigation system
+function showPage(pageId) {
+  // Fast page switching with optimized DOM manipulation
+  const targetPage = document.getElementById(pageId + 'Page');
+  if (!targetPage) return;
+  
+  // Get current active page
+  const currentActivePage = document.querySelector('.page.active');
+  
+  // If already on this page, do nothing
+  if (currentActivePage === targetPage) return;
+  
+  // Update current page
+  currentPage = pageId;
+  
+  // Update navigation (batch DOM updates)
+  requestAnimationFrame(() => {
+    // Remove active class from all pages and nav links
+    document.querySelectorAll('.page.active, .nav-link.active').forEach(el => {
+      el.classList.remove('active');
+    });
+    
+    // Add active class to target page and nav link
+    targetPage.classList.add('active');
+    const navLink = document.querySelector(`[data-page="${pageId}"]`);
+    if (navLink) navLink.classList.add('active');
+    
+    // Update URL without page reload
+    const url = new URL(window.location);
+    url.searchParams.set('page', pageId);
+    window.history.pushState({ page: pageId }, '', url);
+    
+    // Load page-specific content
+    loadPageContent(pageId);
+  });
+}
+
+// Load page-specific content efficiently
+function loadPageContent(pageId) {
+  switch(pageId) {
+    case 'home':
+      loadFeaturedMemes();
+      break;
+    case 'forge':
+      renderGallery();
+      break;
+    case 'faq':
+      // FAQ is already initialized
+      break;
+    case 'about':
+      // About page is static
+      break;
+  }
+}
+
+// Initialize from URL
+function initFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const page = urlParams.get('page') || 'home';
+  showPage(page);
+}
+
+// Handle browser back/forward
+window.addEventListener('popstate', (e) => {
+  const page = e.state?.page || 'home';
+  showPage(page);
+});
+
+// Navigation event listeners
+document.addEventListener('DOMContentLoaded', () => {
+  // Theme toggle
+  const themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+  }
+  
+  // Navigation links
+  document.querySelectorAll('[data-page]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const page = link.getAttribute('data-page');
+      showPage(page);
+    });
+  });
+  
+  // Initialize
+  initTheme();
+  initFromURL();
+});
+
+// ==== FAQ Accordion ====
+function initFAQ() {
+  document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+      const faqItem = question.parentElement;
+      const isActive = faqItem.classList.contains('active');
+      
+      // Close all FAQ items
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Open clicked item if it wasn't active
+      if (!isActive) {
+        faqItem.classList.add('active');
+      }
+    });
+  });
+}
+
+// ==== Featured Memes Showcase ====
+let featuredMemesCache = null;
+let lastFeaturedUpdate = 0;
+
+function loadFeaturedMemes() {
+  const featuredContainer = document.getElementById('featuredMemes');
+  if (!featuredContainer) return;
+  
+  // Cache check - only update if localStorage changed
+  const now = Date.now();
+  if (featuredMemesCache && (now - lastFeaturedUpdate) < 1000) {
+    return; // Skip if updated less than 1 second ago
+  }
+  
+  // Get saved memes from localStorage
+  const savedMemes = JSON.parse(localStorage.getItem('neon-memes') || '[]');
+  
+  // Check if content actually changed
+  const newContent = savedMemes.length === 0 ? 'empty' : savedMemes.slice(0, 6).join('');
+  if (featuredMemesCache === newContent) return;
+  
+  featuredMemesCache = newContent;
+  lastFeaturedUpdate = now;
+  
+  if (savedMemes.length === 0) {
+    // Show placeholder if no memes
+    featuredContainer.innerHTML = `
+      <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+        <h3>No memes yet!</h3>
+        <p>Create your first meme to see it featured here.</p>
+        <button class="btn-primary" data-page="forge">Start Creating</button>
+      </div>
+    `;
+    return;
+  }
+  
+  // Show up to 6 featured memes
+  const featuredMemes = savedMemes.slice(0, 6);
+  featuredContainer.innerHTML = featuredMemes.map((memeSrc, index) => `
+    <div class="card">
+      <img src="${memeSrc}" alt="Featured meme ${index + 1}" loading="lazy" />
+    </div>
+  `).join('');
+}
+
+// ==== Quick Demo ====
+function initQuickDemo() {
+  const quickDemoBtn = document.getElementById('quickDemo');
+  if (quickDemoBtn) {
+    quickDemoBtn.addEventListener('click', () => {
+      // Load a sample image and show the forge
+      const sampleImageUrl = 'https://via.placeholder.com/400x400/1a1a2e/00e5ff?text=Sample+Meme';
+      showPage('forge');
+      
+      // Set up a quick demo
+      setTimeout(() => {
+        if (el('imageUrl')) {
+          el('imageUrl').value = sampleImageUrl;
+          loadFromURL(sampleImageUrl);
+        }
+        if (el('topText')) {
+          el('topText').value = 'Quick Demo';
+        }
+        if (el('bottomText')) {
+          el('bottomText').value = 'Try MemeForge!';
+        }
+        render();
+      }, 100);
+    });
+  }
+}
+
 const state = {
   img: new Image(),
   top: { text: '', x: canvas.width / 2, y: 90, active: true },
@@ -342,4 +551,16 @@ document.getElementById('exportJsonBtn')?.addEventListener('click', () => {
   a.download = 'neon-memes-export.json';
   a.click();
   URL.revokeObjectURL(a.href);
+});
+
+// ==== Initialize Everything ====
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize FAQ accordion
+  initFAQ();
+  
+  // Load featured memes
+  loadFeaturedMemes();
+  
+  // Initialize quick demo
+  initQuickDemo();
 });
