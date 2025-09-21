@@ -1,44 +1,28 @@
-const CACHE = "neon-meme-v1";
-const ASSETS = [
-  "./",
-  "./index.html",
-  "./style.css",
-  "./script.js",
-  "./screenshot.png",
-  "./manifest.json"
-];
+// Simple service worker that doesn't cache anything to avoid errors
+const CACHE_NAME = "memelab-v1";
 
-self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
+self.addEventListener("install", (event) => {
+  // Skip waiting to activate immediately
+  self.skipWaiting();
 });
 
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
-    )
-  );
+self.addEventListener("activate", (event) => {
+  // Take control of all clients immediately
+  event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener("fetch", (e) => {
-  // Skip non-HTTP(S) requests (like chrome-extension://)
-  if (!e.request.url.startsWith("http")) {
+self.addEventListener("fetch", (event) => {
+  // Only handle requests from our origin
+  if (!event.request.url.startsWith(self.location.origin)) {
     return;
   }
   
-  const url = new URL(e.request.url);
-  const isAsset = ASSETS.some((p) => url.pathname.endsWith(p.replace("./", "/")));
-  if (isAsset) {
-    e.respondWith(caches.match(e.request).then((r) => r || fetch(e.request)));
-  } else {
-    e.respondWith(
-      fetch(e.request)
-        .then((resp) => {
-          const copy = resp.clone();
-          caches.open(CACHE).then((c) => c.put(e.request, copy));
-          return resp;
-        })
-        .catch(() => caches.match(e.request))
-    );
+  // Only handle GET requests
+  if (event.request.method !== 'GET') {
+    return;
   }
+  
+  // For all other requests, just let them pass through
+  // No caching to avoid any potential errors
+  event.respondWith(fetch(event.request));
 });
